@@ -9,7 +9,12 @@ export function prettify(language: string | undefined, code: string): string {
     switch (language) {
 
         case 'json': {
-            return JSON.stringify(JSON.parse(code), null, 2);
+            try {
+                const jsonStr = window.atob(code);
+                return JSON.stringify(JSON.parse(jsonStr), null, 2);
+            } catch {
+                return JSON.stringify(JSON.parse(code), null, 2);
+            }
         }
 
         case 'xml': { 

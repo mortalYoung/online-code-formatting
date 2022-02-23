@@ -10,6 +10,8 @@ import {
 
 import { prettify } from './prettier';
 
+let errorNum = 0;
+
 async function handleEvents() {
     const [ editor, formattingEditor ] = await getGroupEditors();
 
@@ -20,6 +22,12 @@ async function handleEvents() {
         try {
             formatting = prettify(language, value);
         } catch (e) {
+            if(e instanceof SyntaxError){
+                molecule.notification.add([{
+                    id: `SyntaxError-${errorNum++}`,
+                    value: e.toString()
+                }])
+            }
             formatting = value;
         }
         if (formatting && formattingEditor) {
